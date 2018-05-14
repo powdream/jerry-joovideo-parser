@@ -11,10 +11,10 @@ class ProgramViewerUrlParser(private val html: String) {
 
     fun parse(): String? {
         val element: Element? =
-            document.selectFirst("span[id=ctl00_ContentPlaceHolder1_ViewLink1_lblError]")
-        return element?.text()
-            ?.replace("link: ", "", ignoreCase = true)
-            ?.replace(" copy link", "", ignoreCase = true)
+            document.selectFirst("button[id=copylink]")
+        return element?.attr("onclick")
+            ?.replace("setClipboard('", "", ignoreCase = true)
+            ?.replace("')", "", ignoreCase = true)
             ?.trim()
     }
 }
