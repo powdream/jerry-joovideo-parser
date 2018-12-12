@@ -15,7 +15,7 @@ class EntryPageParserTest {
     fun setUp() {
         html = ClassLoader
                 .getSystemClassLoader()
-                .getResourceAsStream("entry_page_sample.html")
+                .getResourceAsStream("entry_page_sample_20181212.html")
                 .bufferedReader()
                 .use(Reader::readText)
     }
@@ -27,71 +27,58 @@ class EntryPageParserTest {
 
         val firstSixPrograms = listOf(
                 Program(
-                        title = "로봇이 아니야",
-                        link = "ViewLink.aspx?Num=2101700065911177226",
-                        description = "10회 12/20 Wed"
+                        title = "차달래 부인의 사랑",
+                        link = "viewlink.aspx?Num=2313434252776964169",
+                        description = "73회 12/12 Wed"
                 ),
                 Program(
-                        title = "이판사판",
-                        link = "ViewLink.aspx?Num=2081715372624838673",
-                        description = "17회 12/20 Wed"
+                        title = "강남 스캔들",
+                        link = "viewlink.aspx?Num=2372543740201926669",
+                        description = "13회 12/12 Wed"
                 ),
                 Program(
-                        title = "로봇이 아니야",
-                        link = "ViewLink.aspx?Num=2101700061616209929",
-                        description = "9회 12/20 Wed"
+                        title = "계룡선녀전",
+                        link = "viewlink.aspx?Num=2362410636743016460",
+                        description = "12회 12/11 Tue"
                 ),
                 Program(
-                        title = "이판사판",
-                        link = "ViewLink.aspx?Num=2081715376919805970",
-                        description = "18회 12/20 Wed"
+                        title = "은주의 방",
+                        link = "viewlink.aspx?Num=2368040110508736518",
+                        description = "6회 12/11 Tue"
                 ),
                 Program(
-                        title = "흑기사",
-                        link = "ViewLink.aspx?Num=2096070544900816901",
-                        description = "5회 12/20 Wed"
+                        title = "나쁜형사",
+                        link = "viewlink.aspx?Num=2382958275687940100",
+                        description = "4회 12/11 Tue",
+                        optionalDescription = "* 7 - 8회"
                 ),
                 Program(
-                        title = "슬기로운 감빵생활",
-                        link = "ViewLink.aspx?Num=2081433863288324105",
-                        description = "9회 12/20 Wed"
+                        title = "복수가 돌아왔다",
+                        link = "viewlink.aspx?Num=2382113842167676930",
+                        description = "2회 12/11 Tue",
+                        optionalDescription = "* 3 - 4회"
                 )
         )
         assertEquals(firstSixPrograms, programList.take(6))
 
         val lastSixPrograms = listOf(
                 Program(
-                        title = "내 남자의 비밀",
-                        link = "ViewLink.aspx?Num=1998961901251330105",
-                        description = "57회 12/14 Thu"
+                        title = "비밀과 거짓말",
+                        link = "viewlink.aspx?Num=2249258061151207521",
+                        description = "97회 12/05 Wed"
                 ),
                 Program(
-                        title = "미워도 사랑해",
-                        link = "ViewLink.aspx?Num=2072989674114580503",
-                        description = "23회 12/14 Thu"
+                        title = "차달래 부인의 사랑",
+                        link = "viewlink.aspx?Num=2313434231302127684",
+                        description = "68회 12/05 Wed"
                 ),
                 Program(
-                        title = "너의 등짝에 스매싱",
-                        link = "ViewLink.aspx?Num=2101137107367690248",
-                        description = "8회 12/14 Thu"
-                ),
-                Program(
-                        title = "해피시스터즈",
-                        link = "ViewLink.aspx?Num=2091566962452267017",
-                        description = "9회 12/14 Thu"
-                ),
-                Program(
-                        title = "TV소설 꽃피어라 달순아",
-                        link = "ViewLink.aspx?Num=1971096011694473304",
-                        description = "88회 12/14 Thu"
-                ),
-                Program(
-                        title = "역류",
-                        link = "ViewLink.aspx?Num=2044560705755152408",
-                        description = "24회 12/14 Thu"
+                        title = "강남 스캔들",
+                        link = "viewlink.aspx?Num=2372543718727090184",
+                        description = "8회 12/05 Wed"
                 )
         )
-        assertEquals(lastSixPrograms, programList.takeLast(6))
+        assertEquals(lastSixPrograms, programList.takeLast(3))
     }
 
     @Test
@@ -99,77 +86,44 @@ class EntryPageParserTest {
         val testInstance = EntryPageParser(html)
         val programList = testInstance.parse(ProgramCategory.ENTERTAINMENT)
 
-        val firstSixPrograms = listOf(
+        val firstThreePrograms = listOf(
                 Program(
-                        title = "황금어장 라디오스타",
-                        link = "ViewLink.aspx?Num=129687989229912449",
-                        description = "12/20 Wed",
-                        optionalDescription = "* 누가 내 귀에 꿀 발랐어요? 특집-이문세, 이적"
-                ),
-                Program(
-                        title = "한끼줍쇼",
-                        link = "ViewLink.aspx?Num=1723960866120859709",
-                        description = "12/20 Wed",
-                        optionalDescription = "* 경주-김아중, 한혜연"
-                ),
-                Program(
-                        title = "강적들",
-                        link = "ViewLink.aspx?Num=640282862662516950",
-                        description = "12/20 Wed",
-                        optionalDescription = "* 한중 정상회담, 그 결과는?"
-                ),
-                Program(
-                        title = "주간 아이돌",
-                        link = "ViewLink.aspx?Num=170220184022221138",
-                        description = "12/20 Wed",
-                        optionalDescription = "* EXID"
-                ),
-                Program(
-                        title = "수요미식회",
-                        link = "ViewLink.aspx?Num=1097679420750954645",
-                        description = "12/20 Wed",
-                        optionalDescription = "* 초콜릿"
-                ),
-                Program(
-                        title = "내 방을 여행하는 낯선 이를...",
-                        link = "ViewLink.aspx?Num=2023168547390619658",
-                        description = "12/20 Wed"
-                )
-        )
-        assertEquals(firstSixPrograms, programList.take(6))
-
-        val lastSixPrograms = listOf(
-                Program(
-                        title = "SBS 애니갤러리",
-                        link = "ViewLink.aspx?Num=1376902696497184940",
-                        description = "12/14 Thu"
-                ),
-                Program(
-                        title = "올댓뮤직",
-                        link = "ViewLink.aspx?Num=839004153316835532",
-                        description = "12/14 Thu"
-                ),
-                Program(
-                        title = "보니 하니",
-                        link = "ViewLink.aspx?Num=1204653002986228861",
-                        description = "12/14 Thu"
-                ),
-                Program(
-                        title = "뽀롱뽀롱 뽀로로",
-                        link = "ViewLink.aspx?Num=1825855151311224973",
-                        description = "12/14 Thu"
-                ),
-                Program(
-                        title = "수학이 야호",
-                        link = "ViewLink.aspx?Num=2013316914613518344",
-                        description = "12/14 Thu"
+                        title = "랄랄라 뿌우",
+                        link = "viewlink.aspx?Num=2194651816872378442",
+                        description = "12/12 Wed"
                 ),
                 Program(
                         title = "딩동댕 유치원",
-                        link = "ViewLink.aspx?Num=1204358969525076241",
-                        description = "12/14 Thu"
+                        link = "viewlink.aspx?Num=1204143327807078929",
+                        description = "12/12 Wed"
+                ),
+                Program(
+                        title = "불타는 청춘",
+                        link = "viewlink.aspx?Num=1181342372924489912",
+                        description = "12/11 Tue",
+                        optionalDescription = "* 월동준비 김장하는 날"
                 )
         )
-        assertEquals(lastSixPrograms, programList.takeLast(6))
+        assertEquals(firstThreePrograms, programList.take(3))
+
+        val lastThreePrograms = listOf(
+                Program(
+                        title = "비상소집 - 전국이장회의",
+                        link = "viewlink.aspx?Num=2364662397902520323",
+                        description = "12/05 Wed"
+                ),
+                Program(
+                        title = "인싸채널 체리블렛",
+                        link = "viewlink.aspx?Num=2383521217051557890",
+                        description = "12/05 Wed"
+                ),
+                Program(
+                        title = "스타트업 빅뱅",
+                        link = "viewlink.aspx?Num=2364380935810646022",
+                        description = "12/05 Wed",
+                        optionalDescription = "* 왕중왕전에 진출할 TOP10"
+                )
+        )
+        assertEquals(lastThreePrograms, programList.takeLast(3))
     }
 }
