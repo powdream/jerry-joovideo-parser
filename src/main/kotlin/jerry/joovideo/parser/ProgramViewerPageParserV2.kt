@@ -6,7 +6,6 @@ import jerry.joovideo.model.Supplier
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 
 class ProgramViewerPageParserV2(private val html: String) {
     private val document: Document by lazy {
@@ -17,16 +16,15 @@ class ProgramViewerPageParserV2(private val html: String) {
         val baseFormElements = extractFormArguments()
         val table = document.select("table[id=ctl00_ContentPlaceHolder1_ViewLink1_GridView1]")
         val trList = table.select("tr")
-
-        val suppliersInCurrentPage = extractSuppliersInCurrentPage(trList)
-        val pages = extractPages(trList)
+        val numberOfSuppliersInCurrentPage = trList[1].selectFirst("td").attr("rowspan").toInt()
+        val lastSupplierRowIndex = 1 + numberOfSuppliersInCurrentPage
+        val suppliersInCurrentPage = extractSuppliersInCurrentPage(trList.subList(1, lastSupplierRowIndex))
+        val pages = extractPages(trList.takeIf { it.size > lastSupplierRowIndex }?.lastOrNull())
         return ProgramViewerPage(baseFormElements, suppliersInCurrentPage, pages)
     }
 
-    private fun extractPages(trList: Elements): List<Page> =
-        trList.takeIf { it.size > 7 }
-            ?.lastOrNull()
-            ?.select("td")
+    private fun extractPages(trList: Element?): List<Page> =
+        trList?.select("td")
             ?.mapNotNull<Element, Page> { tdTag ->
                 val spanTag = tdTag.selectFirst("span")
                 val aTag = tdTag.selectFirst("a")
@@ -41,13 +39,10 @@ class ProgramViewerPageParserV2(private val html: String) {
             }
             ?: listOf(Page(1, emptyMap()))
 
-    private fun extractSuppliersInCurrentPage(trList: Elements): List<Supplier> =
-        trList.subList(1, 7.coerceAtMost(trList.size))
-            .asSequence()
+    private fun extractSuppliersInCurrentPage(trList: List<Element>): List<Supplier> =
+        trList.asSequence()
             .map { parseATag(it.selectFirst("a")) }
-            .map { (text, postBack) ->
-                Supplier(text, postBack)
-            }
+            .map { (text, postBack) -> Supplier(text, postBack) }
             .toList()
 
     private fun extractFormArguments(): Map<String, String> =
@@ -62,12 +57,8 @@ class ProgramViewerPageParserV2(private val html: String) {
     private fun parseJavascriptCall(javaScript: String): Map<String, String> =
         REGEX_JAVASCRIPT_CALL.find(javaScript)
             ?.groupValues
-            ?.let {
-                mapOf(
-                    "__EVENTTARGET" to it[1],
-                    "__EVENTARGUMENT" to it[2]
-                )
-            }.orEmpty()
+            ?.let { mapOf("__EVENTTARGET" to it[1], "__EVENTARGUMENT" to it[2]) }
+            .orEmpty()
 
     private data class ATag(
         val text: String,
