@@ -1,6 +1,5 @@
 package jerry.joovideo.parser
 
-import jerry.joovideo.model.Page
 import jerry.joovideo.model.ProgramViewerPage
 import jerry.joovideo.model.Supplier
 import org.jsoup.Jsoup
@@ -13,43 +12,24 @@ class ProgramViewerPageParserV2(private val html: String) {
     }
 
     fun parse(): ProgramViewerPage {
-        val baseFormElements = extractFormArguments()
-        val table = document.select("table[id=ctl00_ContentPlaceHolder1_ViewLink1_GridView1]")
-        val trList = table.select("tr")
-        val numberOfSuppliersInCurrentPage = trList[1].selectFirst("td").attr("rowspan").toInt()
-        val lastSupplierRowIndex = 1 + numberOfSuppliersInCurrentPage
-        val suppliersInCurrentPage = extractSuppliersInCurrentPage(trList.subList(1, lastSupplierRowIndex))
-        val pages = extractPages(trList.takeIf { it.size > lastSupplierRowIndex }?.lastOrNull())
-        return ProgramViewerPage(baseFormElements, suppliersInCurrentPage, pages)
+        val baseFormElements = mapOf("__EVENTTARGET" to "", "__EVENTARGUMENT" to "") + extractFormArguments()
+        val supplierList = extractSupplierList()
+        return ProgramViewerPage(baseFormElements, supplierList)
     }
-
-    private fun extractPages(trList: Element?): List<Page> =
-        trList?.select("td")
-            ?.mapNotNull<Element, Page> { tdTag ->
-                val spanTag = tdTag.selectFirst("span")
-                val aTag = tdTag.selectFirst("a")
-                when {
-                    spanTag != null -> Page(spanTag.text().trim().toIntOrNull() ?: 1, emptyMap())
-                    aTag != null -> {
-                        val (text, postBack) = parseATag(aTag)
-                        Page(text.toInt(), postBack)
-                    }
-                    else -> null
-                }
-            }
-            ?: listOf(Page(1, emptyMap()))
-
-    private fun extractSuppliersInCurrentPage(trList: List<Element>): List<Supplier> =
-        trList.asSequence()
-            .map { parseATag(it.selectFirst("a")) }
-            .map { (text, postBack) -> Supplier(text, postBack) }
-            .toList()
 
     private fun extractFormArguments(): Map<String, String> =
         document.select("input[type=hidden]")
             .associate {
-                it.attr("name") to it.attr("value")
+                val name = it.attr("name")
+                val value = it.attr("value")
+                name to value
             }
+
+    private fun extractSupplierList(): List<Supplier> {
+        val updatePanel = document.selectFirst("div[id=ctl00_ContentPlaceHolder1_viewlink1_UpdatePanel]")
+        val aList = updatePanel.select("a[id=btn]").map(::parseATag)
+        return aList.map { Supplier(it.text, it.postBack) }
+    }
 
     private fun parseATag(aTagElement: Element): ATag =
         ATag(aTagElement.text(), parseJavascriptCall(aTagElement.attr("href")))
