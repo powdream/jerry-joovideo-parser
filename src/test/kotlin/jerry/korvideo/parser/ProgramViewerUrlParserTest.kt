@@ -12,7 +12,7 @@ class ProgramViewerUrlParserTest {
     fun setUp() {
         html = ClassLoader
             .getSystemClassLoader()
-            .getResourceAsStream("program_viewer_page_sample.htm")
+            .getResourceAsStream("program_viewer_top_page_multiple.htm")
             .bufferedReader()
             .use(Reader::readText)
     }
@@ -21,7 +21,7 @@ class ProgramViewerUrlParserTest {
     fun parse() {
         val testInstance = ProgramViewerUrlParser(html)
         assertEquals(
-            "http://www.dailymotion.com/embed/video/k7KSd4IPvh4pHCqcs5k",
+            "https://jetload.net/e/x4SrDAuvDQYn",
             testInstance.parse()
         )
     }

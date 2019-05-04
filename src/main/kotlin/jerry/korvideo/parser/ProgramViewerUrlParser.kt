@@ -10,11 +10,8 @@ class ProgramViewerUrlParser(private val html: String) {
     }
 
     fun parse(): String? {
-        val element: Element? =
-            document.selectFirst("button[id=copylink]")
-        return element?.attr("onclick")
-            ?.replace("setClipboard('", "", ignoreCase = true)
-            ?.replace("')", "", ignoreCase = true)
-            ?.trim()
+        val updatePanel = document.selectFirst("div[id=ctl00_ContentPlaceHolder1_viewlink1_UpdatePanel]")
+        val iframe = updatePanel.selectFirst("iframe[id=frameFlashId]")
+        return iframe.attr("src")
     }
 }
