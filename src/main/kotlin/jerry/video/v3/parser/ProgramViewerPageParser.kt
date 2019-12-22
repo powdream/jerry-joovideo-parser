@@ -81,7 +81,7 @@ class ProgramViewerPageParser(html: String) : ParserTemplate<ProgramViewer>(html
             ?: queryParameter.length
         return URLDecoder.decode(
             queryParameter.substring(startIndex until endIndex),
-            charset("UTF-8")
+            "UTF-8"
         )
     }
 }
