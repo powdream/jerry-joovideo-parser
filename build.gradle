@@ -15,7 +15,7 @@ plugins {
 }
 
 group 'jerry'
-version '3.0.0-SNAPSHOT'
+version '3.0.1-SNAPSHOT'
 
 apply plugin: 'kotlin'
 apply plugin: 'java'
